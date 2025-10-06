@@ -3,6 +3,7 @@ import { Observable, of, delay } from 'rxjs';
 import {
   DashboardData,
   DashboardKPI,
+  StatusAtendente,
   LeadsPorFase,
   LeadsPorSituacao,
   LeadsPorOrigem,
@@ -31,6 +32,13 @@ export class DashboardService {
     leadsFechados: 42
   };
 
+  private mockStatusAtendentes: StatusAtendente[] = [
+    { status: 'Disponível', quantidade: 12, cor: '#28a745', icone: '✓' },
+    { status: 'Em Ligação', quantidade: 8, cor: '#007bff', icone: '📞' },
+    { status: 'Pós-Ligação', quantidade: 5, cor: '#ffc107', icone: '📝' },
+    { status: 'Pausa', quantidade: 3, cor: '#6c757d', icone: '⏸' }
+  ];
+
   private mockLeadsPorFase: LeadsPorFase[] = [
     { fase: 'Recebido a Distribuir', faseId: 1, quantidade: 45, percentual: 18.15, cor: '#17a2b8', icone: '📥' },
     { fase: 'Distribuídos para Contato', faseId: 2, quantidade: 98, percentual: 39.52, cor: '#007bff', icone: '📞' },
@@ -41,26 +49,24 @@ export class DashboardService {
   ];
 
   private mockLeadsPorSituacao: LeadsPorSituacao[] = [
-    { situacao: 'Novo Lead', quantidade: 56, percentual: 22.58, cor: '#007bff' },
-    { situacao: 'Em Negociação', quantidade: 78, percentual: 31.45, cor: '#ffc107' },
-    { situacao: 'Aguardando Documentação', quantidade: 32, percentual: 12.90, cor: '#17a2b8' },
-    { situacao: 'Em Análise', quantidade: 21, percentual: 8.47, cor: '#6c757d' },
-    { situacao: 'Convertido', quantidade: 42, percentual: 16.93, cor: '#28a745' },
-    { situacao: 'Perdido', quantidade: 19, percentual: 7.66, cor: '#dc3545' }
+    { situacao: 'Distribuir para 1º acionamento', quantidade: 56, percentual: 22.58, cor: '#007bff' },
+    { situacao: 'Contato com sucesso  /pediu retorno', quantidade: 78, percentual: 31.45, cor: '#ffc107' },
+    { situacao: 'Red./ Contato com Sucesso pediu retorno', quantidade: 32, percentual: 12.90, cor: '#17a2b8' },
+    { situacao: 'Venda com 1 pagamento já realizado', quantidade: 21, percentual: 8.47, cor: '#6c757d' },
+    { situacao: 'Venda em Andamento', quantidade: 42, percentual: 16.93, cor: '#28a745' },
+    { situacao: 'Contato sem interesse/Baixar da Carteira', quantidade: 19, percentual: 7.66, cor: '#dc3545' }
   ];
 
   private mockLeadsPorOrigem: LeadsPorOrigem[] = [
-    { origem: 'Site', quantidade: 98, percentual: 39.52 },
-    { origem: 'Facebook Ads', quantidade: 67, percentual: 27.02 },
-    { origem: 'Google Ads', quantidade: 45, percentual: 18.15 },
-    { origem: 'Instagram', quantidade: 23, percentual: 9.27 },
-    { origem: 'Indicação', quantidade: 15, percentual: 6.05 }
+    { origem: 'Indicação gerente', quantidade: 114, percentual: 45.7 },
+    { origem: 'SINAL', quantidade: 67, percentual: 26.09 },
+    { origem: 'Grupo Roma', quantidade: 45, percentual: 18.07 },
+    { origem: 'CREDIMORAR', quantidade: 23, percentual: 9.23 }
   ];
 
   private mockLeadsPorProduto: LeadsPorProduto[] = [
     { produto: 'Consórcio Imóvel', quantidade: 142, valorTotal: 38500000, ticketMedio: 271126 },
-    { produto: 'Consórcio Auto', quantidade: 78, valorTotal: 6890000, ticketMedio: 88333 },
-    { produto: 'Consórcio Serviços', quantidade: 28, valorTotal: 3780000, ticketMedio: 135000 }
+    { produto: 'Consórcio Auto', quantidade: 78, valorTotal: 6890000, ticketMedio: 88333 } 
   ];
 
   private mockFunilVendas: FunilVendas[] = [
@@ -135,6 +141,7 @@ export class DashboardService {
   getDashboardData(): Observable<DashboardData> {
     const dashboardData: DashboardData = {
       kpis: this.mockKPIs,
+      statusAtendentes: this.mockStatusAtendentes,
       leadsPorFase: this.mockLeadsPorFase,
       leadsPorSituacao: this.mockLeadsPorSituacao,
       leadsPorOrigem: this.mockLeadsPorOrigem,

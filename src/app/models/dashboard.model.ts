@@ -66,8 +66,16 @@ export interface TendenciaTemporal {
   valorTotal: number;
 }
 
+export interface StatusAtendente {
+  status: string;
+  quantidade: number;
+  cor: string;
+  icone: string;
+}
+
 export interface DashboardData {
   kpis: DashboardKPI;
+  statusAtendentes: StatusAtendente[];
   leadsPorFase: LeadsPorFase[];
   leadsPorSituacao: LeadsPorSituacao[];
   leadsPorOrigem: LeadsPorOrigem[];

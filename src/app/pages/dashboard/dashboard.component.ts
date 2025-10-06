@@ -48,4 +48,9 @@ export class DashboardComponent implements OnInit {
   formatNumber(value: number): string {
     return new Intl.NumberFormat('pt-BR').format(value);
   }
+
+  getTotalAtendentes(): number {
+    if (!this.dashboardData?.statusAtendentes) return 0;
+    return this.dashboardData.statusAtendentes.reduce((total, item) => total + item.quantidade, 0);
+  }
 }
