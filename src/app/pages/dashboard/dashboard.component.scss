@@ -213,6 +213,26 @@
       border-bottom: none;
     }
 
+    &.clickable {
+      cursor: pointer;
+      transition: background-color 0.2s, padding 0.2s;
+      border-radius: 6px;
+      margin: 0 -8px;
+      padding: 10px 8px;
+
+      &:hover {
+        background-color: #f8f9fa;
+
+        .legend-label {
+          color: #007bff;
+        }
+      }
+
+      &:active {
+        background-color: #e9ecef;
+      }
+    }
+
     .legend-color {
       width: 16px;
       height: 16px;
@@ -229,6 +249,7 @@
       flex: 1;
       font-size: 14px;
       color: #333;
+      transition: color 0.2s;
     }
 
     .legend-value {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardData } from '../../models/dashboard.model';
 
@@ -14,7 +15,10 @@ export class DashboardComponent implements OnInit {
   dashboardData: DashboardData | null = null;
   loading = true;
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboard();
@@ -52,5 +56,17 @@ export class DashboardComponent implements OnInit {
   getTotalAtendentes(): number {
     if (!this.dashboardData?.statusAtendentes) return 0;
     return this.dashboardData.statusAtendentes.reduce((total, item) => total + item.quantidade, 0);
+  }
+
+  navigateToLeadsByFase(faseId: number): void {
+    // Navega para a página de leads com filtro de fase
+    // Quando implementado o real, será usado: this.router.navigate(['/leads'], { queryParams: { faseId } });
+    this.router.navigate(['/leads']);
+  }
+
+  navigateToLeadsBySituacao(situacao: string): void {
+    // Navega para a página de leads com filtro de situação
+    // Quando implementado o real, será usado: this.router.navigate(['/leads'], { queryParams: { situacao } });
+    this.router.navigate(['/leads']);
   }
 }

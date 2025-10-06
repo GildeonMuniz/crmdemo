@@ -80,7 +80,10 @@
         <div class="chart-content">
           <div class="pie-chart-container">
             <div class="pie-legend">
-              <div *ngFor="let item of dashboardData.leadsPorFase" class="legend-item">
+              <div *ngFor="let item of dashboardData.leadsPorFase"
+                   class="legend-item clickable"
+                   (click)="navigateToLeadsByFase(item.faseId)"
+                   title="Clique para ver os leads desta fase">
                 <span class="legend-color" [style.background-color]="item.cor"></span>
                 <span class="legend-icon">{{ item.icone }}</span>
                 <span class="legend-label">{{ item.fase }}</span>
@@ -97,7 +100,10 @@
         <div class="chart-content">
           <div class="pie-chart-container">
             <div class="pie-legend">
-              <div *ngFor="let item of dashboardData.leadsPorSituacao" class="legend-item">
+              <div *ngFor="let item of dashboardData.leadsPorSituacao"
+                   class="legend-item clickable"
+                   (click)="navigateToLeadsBySituacao(item.situacao)"
+                   title="Clique para ver os leads desta situação">
                 <span class="legend-color" [style.background-color]="item.cor"></span>
                 <span class="legend-label">{{ item.situacao }}</span>
                 <span class="legend-value">{{ item.quantidade }} ({{ formatPercent(item.percentual) }})</span>
