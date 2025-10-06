@@ -49,28 +49,31 @@
       </div>
     </div>
 
-    <!-- Grid de Gráficos -->
-    <div class="charts-grid">
-      <!-- Status de Atendentes -->
-      <div class="chart-card status-atendentes-card">
-        <h3>👥 Status de Atendentes</h3>
-        <div class="chart-content">
-          <div class="status-grid">
-            <div *ngFor="let item of dashboardData.statusAtendentes" class="status-item">
-              <div class="status-icon" [style.background-color]="item.cor">{{ item.icone }}</div>
-              <div class="status-info">
-                <div class="status-label">{{ item.status }}</div>
-                <div class="status-count">{{ item.quantidade }}</div>
-              </div>
+    <!-- Status de Atendentes -->
+    <div class="chart-card status-atendentes-card full-width">
+      <h3>👥 Status de Atendentes</h3>
+      <div class="chart-content">
+        <div class="status-grid-horizontal">
+          <div *ngFor="let item of dashboardData.statusAtendentes" class="status-item">
+            <div class="status-icon" [style.background-color]="item.cor">{{ item.icone }}</div>
+            <div class="status-info">
+              <div class="status-label">{{ item.status }}</div>
+              <div class="status-count">{{ item.quantidade }}</div>
             </div>
           </div>
-          <div class="status-total">
-            <span class="total-label">Total de Atendentes:</span>
-            <span class="total-value">{{ getTotalAtendentes() }}</span>
+          <div class="status-total-inline">
+            <div class="total-icon">👥</div>
+            <div class="total-info">
+              <div class="total-label">Total</div>
+              <div class="total-value">{{ getTotalAtendentes() }}</div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
+    <!-- Grid de Gráficos -->
+    <div class="charts-grid">
       <!-- Leads por Fase -->
       <div class="chart-card">
         <h3>📊 Leads por Fase</h3>

@@ -423,79 +423,134 @@
 
 // Status de Atendentes
 .status-atendentes-card {
-  .status-grid {
+  .status-grid-horizontal {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
-    margin-bottom: 20px;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
+
+      .status-total-inline {
+        grid-column: span 3;
+      }
+    }
 
     @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+
+      .status-total-inline {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 480px) {
       grid-template-columns: 1fr;
-      gap: 12px;
+
+      .status-total-inline {
+        grid-column: 1;
+      }
     }
   }
 
   .status-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 16px;
     background: #f8f9fa;
-    border-radius: 8px;
+    border-radius: 12px;
     transition: all 0.3s ease;
+    text-align: center;
 
     &:hover {
       background: #e9ecef;
-      transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .status-icon {
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 24px;
       color: white;
       flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .status-info {
-      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
       .status-label {
         font-size: 13px;
         color: #666;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
+        font-weight: 500;
       }
 
       .status-count {
-        font-size: 24px;
+        font-size: 32px;
         font-weight: bold;
         color: #333;
+        line-height: 1;
       }
     }
   }
 
-  .status-total {
-    padding: 16px;
-    background: linear-gradient(135deg, #4a9fd8 0%, #6bb5e6 100%);
-    border-radius: 8px;
+  .status-total-inline {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    color: white;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 16px;
+    background: linear-gradient(135deg, #4a9fd8 0%, #6bb5e6 100%);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-align: center;
 
-    .total-label {
-      font-size: 14px;
-      font-weight: 600;
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(74, 159, 216, 0.4);
     }
 
-    .total-value {
+    .total-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 28px;
-      font-weight: bold;
+    }
+
+    .total-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+
+      .total-label {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        opacity: 0.95;
+      }
+
+      .total-value {
+        font-size: 32px;
+        font-weight: bold;
+        line-height: 1;
+      }
     }
   }
 }
