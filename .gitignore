@@ -1,0 +1,43 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/build
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# IDEs e editores
+/.idea
+/.vscode
+/.vs
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Testes
+/coverage
+
+# Ambiente
+/.env
+/.env.*.local
+
+# Angular cache
+.angular/cache
+
+# Arquivos de lock (opcional, se não quiser versionar)
+/package-lock.json
+/yarn.lock
+/pnpm-lock.yaml

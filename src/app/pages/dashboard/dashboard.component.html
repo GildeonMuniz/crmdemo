@@ -1,0 +1,206 @@
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Dashboard - Visão Geral</h1>
+    <p class="subtitle">Acompanhamento de leads e performance de vendas</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando dados...</p>
+  </div>
+
+  <div *ngIf="!loading && dashboardData" class="dashboard-content">
+    <!-- KPIs Principais -->
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <div class="stat-title">Total de Leads</div>
+          <div class="stat-value">{{ formatNumber(dashboardData.kpis.totalLeads) }}</div>
+          <div class="stat-change positive">↑ {{ formatNumber(dashboardData.kpis.leadsMes) }} este mês</div>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="stat-icon">✓</div>
+        <div class="stat-info">
+          <div class="stat-title">Leads Convertidos</div>
+          <div class="stat-value">{{ formatNumber(dashboardData.kpis.leadsConvertidos) }}</div>
+          <div class="stat-change positive">{{ formatPercent(dashboardData.kpis.taxaConversao) }} conversão</div>
+        </div>
+      </div>
+
+      <div class="stat-card orange">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <div class="stat-title">Ticket Médio</div>
+          <div class="stat-value">{{ formatCurrency(dashboardData.kpis.ticketMedio) }}</div>
+          <div class="stat-change">Média geral</div>
+        </div>
+      </div>
+
+      <div class="stat-card purple">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-info">
+          <div class="stat-title">Em Negociação</div>
+          <div class="stat-value">{{ formatNumber(dashboardData.kpis.leadsEmNegociacao) }}</div>
+          <div class="stat-change">{{ formatNumber(dashboardData.kpis.leadsPendentes) }} pendentes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de Gráficos -->
+    <div class="charts-grid">
+      <!-- Leads por Fase -->
+      <div class="chart-card">
+        <h3>📊 Leads por Fase</h3>
+        <div class="chart-content">
+          <div class="pie-chart-container">
+            <div class="pie-legend">
+              <div *ngFor="let item of dashboardData.leadsPorFase" class="legend-item">
+                <span class="legend-color" [style.background-color]="item.cor"></span>
+                <span class="legend-icon">{{ item.icone }}</span>
+                <span class="legend-label">{{ item.fase }}</span>
+                <span class="legend-value">{{ item.quantidade }} ({{ formatPercent(item.percentual) }})</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leads por Situação -->
+      <div class="chart-card">
+        <h3>📋 Leads por Situação</h3>
+        <div class="chart-content">
+          <div class="pie-chart-container">
+            <div class="pie-legend">
+              <div *ngFor="let item of dashboardData.leadsPorSituacao" class="legend-item">
+                <span class="legend-color" [style.background-color]="item.cor"></span>
+                <span class="legend-label">{{ item.situacao }}</span>
+                <span class="legend-value">{{ item.quantidade }} ({{ formatPercent(item.percentual) }})</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Funil de Vendas -->
+      <div class="chart-card">
+        <h3>Funil de Vendas</h3>
+        <div class="funnel-container">
+          <div *ngFor="let etapa of dashboardData.funilVendas" class="funnel-item">
+            <div class="funnel-label">{{ etapa.etapa }}</div>
+            <div class="funnel-bar">
+              <div class="funnel-fill" [style.width.%]="etapa.percentualConversao">
+                <span class="funnel-value">{{ etapa.quantidade }}</span>
+              </div>
+            </div>
+            <div class="funnel-percent">{{ formatPercent(etapa.percentualConversao) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leads por Produto -->
+    <div class="chart-card full-width">
+      <h3>Leads por Produto</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Quantidade</th>
+              <th>Valor Total</th>
+              <th>Ticket Médio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let produto of dashboardData.leadsPorProduto">
+              <td><strong>{{ produto.produto }}</strong></td>
+              <td>{{ formatNumber(produto.quantidade) }}</td>
+              <td>{{ formatCurrency(produto.valorTotal) }}</td>
+              <td>{{ formatCurrency(produto.ticketMedio) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Performance de Vendedores -->
+    <div class="chart-card full-width">
+      <h3>Performance de Vendedores</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Vendedor</th>
+              <th>Total Leads</th>
+              <th>Convertidos</th>
+              <th>Taxa Conversão</th>
+              <th>Valor Total</th>
+              <th>Ticket Médio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vendedor of dashboardData.performanceVendedores">
+              <td><strong>{{ vendedor.nome }}</strong></td>
+              <td>{{ formatNumber(vendedor.totalLeads) }}</td>
+              <td>{{ formatNumber(vendedor.leadsConvertidos) }}</td>
+              <td>
+                <span class="badge" [class.badge-success]="vendedor.taxaConversao >= 18"
+                      [class.badge-warning]="vendedor.taxaConversao >= 12 && vendedor.taxaConversao < 18"
+                      [class.badge-danger]="vendedor.taxaConversao < 12">
+                  {{ formatPercent(vendedor.taxaConversao) }}
+                </span>
+              </td>
+              <td>{{ formatCurrency(vendedor.valorTotal) }}</td>
+              <td>{{ formatCurrency(vendedor.ticketMedio) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Leads por Origem -->
+    <div class="chart-card">
+      <h3>Leads por Origem</h3>
+      <div class="chart-content">
+        <div class="bar-chart">
+          <div *ngFor="let origem of dashboardData.leadsPorOrigem" class="bar-item">
+            <div class="bar-label">{{ origem.origem }}</div>
+            <div class="bar-container">
+              <div class="bar-fill" [style.width.%]="origem.percentual">
+                <span class="bar-value">{{ origem.quantidade }}</span>
+              </div>
+            </div>
+            <div class="bar-percent">{{ formatPercent(origem.percentual) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tendência Temporal -->
+    <div class="chart-card">
+      <h3>Tendência de Leads (Últimas Semanas)</h3>
+      <div class="timeline-container">
+        <div *ngFor="let item of dashboardData.tendenciaTemporal.slice(-6)" class="timeline-item">
+          <div class="timeline-date">{{ item.data | date: 'dd/MM' }}</div>
+          <div class="timeline-stats">
+            <div class="timeline-stat">
+              <span class="timeline-label">Recebidos:</span>
+              <span class="timeline-value">{{ item.leadsRecebidos }}</span>
+            </div>
+            <div class="timeline-stat success">
+              <span class="timeline-label">Convertidos:</span>
+              <span class="timeline-value">{{ item.leadsConvertidos }}</span>
+            </div>
+            <div class="timeline-stat">
+              <span class="timeline-label">Valor:</span>
+              <span class="timeline-value">{{ formatCurrency(item.valorTotal) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

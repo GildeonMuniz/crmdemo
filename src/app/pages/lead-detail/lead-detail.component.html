@@ -1,0 +1,185 @@
+<div class="lead-detail-container">
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando detalhes do lead...</p>
+  </div>
+
+  <!-- Detalhes do Lead -->
+  <div *ngIf="!loading && lead" class="detail-content">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <a routerLink="/leads" class="back-link">← Voltar para lista</a>
+        <h1>{{ lead.nome }}</h1>
+        <div class="header-info">
+          <span class="badge" [ngClass]="getSituacaoBadgeClass(lead.situacao)">
+            {{ lead.situacao }}
+          </span>
+          <span class="info-item">ID: {{ lead.id }}</span>
+          <span class="info-item">Responsável: {{ lead.responsavel }}</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary">✏️ Editar</button>
+        <button class="btn btn-success">📞 Ligar</button>
+        <button class="btn btn-success">💬 WhatsApp</button>
+      </div>
+    </div>
+
+    <!-- Grid de Informações -->
+    <div class="info-grid">
+      <!-- Dados Pessoais -->
+      <div class="info-card">
+        <h3>👤 Dados Pessoais</h3>
+        <div class="info-row">
+          <div class="info-label">Nome Completo:</div>
+          <div class="info-value">{{ lead.nome }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">CPF:</div>
+          <div class="info-value">{{ lead.cpf }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Data de Nascimento:</div>
+          <div class="info-value">{{ formatDate(lead.dataNascimento) }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Telefone:</div>
+          <div class="info-value">{{ lead.telefone }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Email:</div>
+          <div class="info-value">{{ lead.email }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Melhor Horário:</div>
+          <div class="info-value">{{ lead.melhorHorarioContato }}</div>
+        </div>
+      </div>
+
+      <!-- Dados do Produto -->
+      <div class="info-card">
+        <h3>🏷️ Dados do Produto</h3>
+        <div class="info-row">
+          <div class="info-label">Produto:</div>
+          <div class="info-value"><strong>{{ lead.produto }}</strong></div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Tipo de Bem:</div>
+          <div class="info-value">{{ lead.tipoBem }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Valor da Proposta:</div>
+          <div class="info-value valor">{{ formatCurrency(lead.valorProposta) }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Data Recebimento:</div>
+          <div class="info-value">{{ formatDate(lead.dataRecebimento) }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Próxima Ação:</div>
+          <div class="info-value"><strong>{{ lead.proximaAcao }}</strong></div>
+        </div>
+      </div>
+
+      <!-- Dados de Origem -->
+      <div class="info-card">
+        <h3>📍 Origem e Campanha</h3>
+        <div class="info-row">
+          <div class="info-label">Origem do Lead:</div>
+          <div class="info-value">{{ lead.origemLead }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Campanha:</div>
+          <div class="info-value">{{ lead.campanha }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Cluster:</div>
+          <div class="info-value">{{ lead.cluster }}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">Responsável:</div>
+          <div class="info-value">{{ lead.responsavel }}</div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div class="info-card full-width">
+        <h3>📝 Observações</h3>
+        <div class="observacoes">
+          {{ lead.observacoes }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Agendamentos -->
+    <div class="section-card" *ngIf="lead.agendamentos && lead.agendamentos.length > 0">
+      <h3>📅 Agendamentos</h3>
+      <div class="agendamentos-list">
+        <div *ngFor="let agenda of lead.agendamentos" class="agendamento-item">
+          <div class="agendamento-header">
+            <span class="agendamento-data">{{ formatDateTime(agenda.dataDaAgenda, agenda.horaDaAgenda) }}</span>
+            <span class="badge" [class.badge-success]="agenda.agendado" [class.badge-danger]="!agenda.agendado">
+              {{ agenda.agendado ? 'Agendado' : 'Cancelado' }}
+            </span>
+          </div>
+          <div class="agendamento-info">
+            <div><strong>Melhor Horário:</strong> {{ agenda.novoMelhorHorario }}</div>
+            <div><strong>Registrado em:</strong> {{ formatDate(agenda.dataRegistro) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico de Interações -->
+    <div class="section-card">
+      <h3>📋 Histórico de Interações</h3>
+
+      <div *ngIf="!lead.historico || lead.historico.length === 0" class="no-historico">
+        <p>Nenhuma interação registrada ainda.</p>
+      </div>
+
+      <div *ngIf="lead.historico && lead.historico.length > 0" class="timeline">
+        <div *ngFor="let hist of lead.historico" class="timeline-item">
+          <div class="timeline-marker">
+            <span class="timeline-icon">{{ getMeioComunicacaoIcon(hist.meioComunicacao) }}</span>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <div class="timeline-title">
+                <strong>{{ hist.meioComunicacao }}</strong>
+                <span class="timeline-type">{{ hist.tipoAcionamento }}</span>
+              </div>
+              <div class="timeline-date">
+                {{ formatDateTime(hist.dataDoHistorico, hist.horaDoHistorico) }}
+              </div>
+            </div>
+            <div class="timeline-body">
+              <p>{{ hist.historico }}</p>
+              <div class="timeline-meta">
+                <span *ngIf="hist.contato"><strong>Contato:</strong> {{ hist.contato }}</span>
+                <span *ngIf="hist.creditoNegociado">
+                  <strong>Crédito Negociado:</strong> {{ formatCurrency(hist.creditoNegociado) }}
+                </span>
+                <span *ngIf="hist.expectativaContemplacao">
+                  <strong>Expectativa de Contemplação:</strong> {{ formatDate(hist.expectativaContemplacao) }}
+                </span>
+                <span *ngIf="hist.numeroProtocoloAtendimento">
+                  <strong>Protocolo:</strong> {{ hist.numeroProtocoloAtendimento }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Não encontrado -->
+  <div *ngIf="!loading && !lead" class="not-found">
+    <h2>Lead não encontrado</h2>
+    <p>O lead com ID {{ leadId }} não foi encontrado.</p>
+    <a routerLink="/leads" class="btn btn-primary">Voltar para lista</a>
+  </div>
+</div>

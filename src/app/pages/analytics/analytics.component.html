@@ -1,0 +1,278 @@
+<div class="analytics-container">
+  <div class="header">
+    <h1>Analytics - Análise Detalhada</h1>
+    <p class="subtitle">Visualização analítica de dados e tendências</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando analytics...</p>
+  </div>
+
+  <div *ngIf="!loading" class="analytics-content">
+    <!-- KPIs Resumidos -->
+    <div class="kpi-summary">
+      <div class="kpi-item">
+        <div class="kpi-label">Total de Leads</div>
+        <div class="kpi-value primary">{{ formatNumber(kpis!.totalLeads) }}</div>
+      </div>
+      <div class="kpi-item">
+        <div class="kpi-label">Taxa de Conversão</div>
+        <div class="kpi-value success">{{ formatPercent(kpis!.taxaConversao) }}</div>
+      </div>
+      <div class="kpi-item">
+        <div class="kpi-label">Ticket Médio</div>
+        <div class="kpi-value warning">{{ formatCurrency(kpis!.ticketMedio) }}</div>
+      </div>
+      <div class="kpi-item">
+        <div class="kpi-label">Em Negociação</div>
+        <div class="kpi-value info">{{ formatNumber(kpis!.leadsEmNegociacao) }}</div>
+      </div>
+    </div>
+
+    <!-- SLA Overview -->
+    <div class="chart-card full-width">
+      <h3>⏱️ Acompanhamento de SLAs por Situação</h3>
+      <div class="sla-overview">
+        <div class="sla-description">
+          <p>Os SLAs (Service Level Agreements) definem o tempo máximo que um lead pode permanecer em cada situação.
+          O acompanhamento em tempo real permite identificar leads que exigem atenção prioritária.</p>
+        </div>
+        <div class="sla-config-grid">
+          <div class="sla-config-item">
+            <div class="sla-config-header">
+              <span class="sla-badge badge-info">Novo Lead</span>
+              <span class="sla-time">2 dias</span>
+            </div>
+            <div class="sla-config-desc">Primeiro contato deve ser feito em até 2 dias</div>
+          </div>
+          <div class="sla-config-item">
+            <div class="sla-config-header">
+              <span class="sla-badge badge-warning">Em Negociação</span>
+              <span class="sla-time">7 dias</span>
+            </div>
+            <div class="sla-config-desc">Negociação deve ser concluída em até 7 dias</div>
+          </div>
+          <div class="sla-config-item">
+            <div class="sla-config-header">
+              <span class="sla-badge badge-info">Aguardando Doc.</span>
+              <span class="sla-time">5 dias</span>
+            </div>
+            <div class="sla-config-desc">Documentação deve ser recebida em até 5 dias</div>
+          </div>
+          <div class="sla-config-item">
+            <div class="sla-config-header">
+              <span class="sla-badge badge-warning">Em Análise</span>
+              <span class="sla-time">3 dias</span>
+            </div>
+            <div class="sla-config-desc">Análise deve ser finalizada em até 3 dias</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Análise de Leads por Situação (Gráfico de Pizza) -->
+    <div class="chart-card">
+      <h3>📊 Distribuição por Situação</h3>
+      <div class="pie-chart-visual">
+        <div class="pie-segments">
+          <div *ngFor="let item of leadsPorSituacao; let i = index"
+               class="pie-segment"
+               [style.background]="item.cor"
+               [style.flex]="item.percentual">
+          </div>
+        </div>
+        <div class="pie-legend-grid">
+          <div *ngFor="let item of leadsPorSituacao" class="legend-item">
+            <span class="legend-color" [style.background]="item.cor"></span>
+            <div class="legend-info">
+              <div class="legend-label">{{ item.situacao }}</div>
+              <div class="legend-stats">
+                <span class="legend-count">{{ item.quantidade }}</span>
+                <span class="legend-percent">{{ formatPercent(item.percentual) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Funil de Vendas Detalhado -->
+    <div class="chart-card full-width">
+      <h3>🎯 Funil de Conversão</h3>
+      <div class="funnel-visual">
+        <div *ngFor="let etapa of funilVendas" class="funnel-stage">
+          <div class="funnel-bar-container">
+            <div class="funnel-bar" [style.width.%]="etapa.percentualConversao">
+              <div class="funnel-content">
+                <div class="funnel-stage-name">{{ etapa.etapa }}</div>
+                <div class="funnel-stage-value">{{ etapa.quantidade }} leads</div>
+              </div>
+            </div>
+          </div>
+          <div class="funnel-conversion">
+            <span class="conversion-rate">{{ formatPercent(etapa.percentualConversao) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico de Tendência Temporal -->
+    <div class="chart-card full-width">
+      <h3>📈 Tendência de Leads (Últimas 9 Semanas)</h3>
+      <div class="line-chart">
+        <div class="chart-bars">
+          <div *ngFor="let item of tendenciaTemporal" class="chart-bar-group">
+            <div class="chart-bars-container">
+              <div class="chart-bar received"
+                   [style.height.%]="getBarHeight(item.leadsRecebidos, getMaxValue(tendenciaTemporal))"
+                   [title]="'Recebidos: ' + item.leadsRecebidos">
+                <span class="bar-value">{{ item.leadsRecebidos }}</span>
+              </div>
+              <div class="chart-bar converted"
+                   [style.height.%]="getBarHeight(item.leadsConvertidos, getMaxValue(tendenciaTemporal))"
+                   [title]="'Convertidos: ' + item.leadsConvertidos">
+                <span class="bar-value">{{ item.leadsConvertidos }}</span>
+              </div>
+            </div>
+            <div class="chart-label">{{ formatDate(item.data) }}</div>
+          </div>
+        </div>
+        <div class="chart-legend-horizontal">
+          <div class="legend-item-horizontal">
+            <span class="legend-box received"></span>
+            <span>Leads Recebidos</span>
+          </div>
+          <div class="legend-item-horizontal">
+            <span class="legend-box converted"></span>
+            <span>Leads Convertidos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance por Produto -->
+    <div class="chart-card">
+      <h3>🏷️ Performance por Produto</h3>
+      <div class="product-chart">
+        <div *ngFor="let produto of leadsPorProduto" class="product-item">
+          <div class="product-header">
+            <div class="product-name">{{ produto.produto }}</div>
+            <div class="product-count">{{ produto.quantidade }} leads</div>
+          </div>
+          <div class="product-bar-container">
+            <div class="product-bar"
+                 [style.width.%]="(produto.quantidade / kpis!.totalLeads) * 100">
+            </div>
+          </div>
+          <div class="product-stats">
+            <div class="product-stat">
+              <span class="stat-label">Valor Total:</span>
+              <span class="stat-value">{{ formatCurrency(produto.valorTotal) }}</span>
+            </div>
+            <div class="product-stat">
+              <span class="stat-label">Ticket Médio:</span>
+              <span class="stat-value">{{ formatCurrency(produto.ticketMedio) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canais de Aquisição -->
+    <div class="chart-card">
+      <h3>📍 Canais de Aquisição</h3>
+      <div class="channel-chart">
+        <div *ngFor="let origem of leadsPorOrigem" class="channel-item">
+          <div class="channel-info">
+            <div class="channel-name">{{ origem.origem }}</div>
+            <div class="channel-stats">
+              <span class="channel-count">{{ origem.quantidade }}</span>
+              <span class="channel-percent">{{ formatPercent(origem.percentual) }}</span>
+            </div>
+          </div>
+          <div class="channel-bar-container">
+            <div class="channel-bar" [style.width.%]="origem.percentual"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ranking de Vendedores -->
+    <div class="chart-card full-width">
+      <h3>🏆 Ranking de Vendedores</h3>
+      <div class="ranking-table">
+        <div class="ranking-header">
+          <div class="rank-col">#</div>
+          <div class="name-col">Vendedor</div>
+          <div class="stat-col">Total Leads</div>
+          <div class="stat-col">Convertidos</div>
+          <div class="stat-col">Taxa Conv.</div>
+          <div class="stat-col">Valor Total</div>
+          <div class="stat-col">Ticket Médio</div>
+        </div>
+        <div *ngFor="let vendedor of performanceVendedores; let i = index" class="ranking-row">
+          <div class="rank-col">
+            <div class="rank-badge" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
+              {{ i + 1 }}
+            </div>
+          </div>
+          <div class="name-col">
+            <strong>{{ vendedor.nome }}</strong>
+          </div>
+          <div class="stat-col">{{ formatNumber(vendedor.totalLeads) }}</div>
+          <div class="stat-col">{{ formatNumber(vendedor.leadsConvertidos) }}</div>
+          <div class="stat-col">
+            <span class="badge"
+                  [class.badge-success]="vendedor.taxaConversao >= 18"
+                  [class.badge-warning]="vendedor.taxaConversao >= 12 && vendedor.taxaConversao < 18"
+                  [class.badge-danger]="vendedor.taxaConversao < 12">
+              {{ formatPercent(vendedor.taxaConversao) }}
+            </span>
+          </div>
+          <div class="stat-col valor">{{ formatCurrency(vendedor.valorTotal) }}</div>
+          <div class="stat-col">{{ formatCurrency(vendedor.ticketMedio) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Análise Comparativa -->
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-icon">🎯</div>
+        <div class="insight-content">
+          <div class="insight-title">Melhor Conversão</div>
+          <div class="insight-value">{{ performanceVendedores[0]?.nome }}</div>
+          <div class="insight-detail">{{ formatPercent(performanceVendedores[0]?.taxaConversao || 0) }}</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-icon">💰</div>
+        <div class="insight-content">
+          <div class="insight-title">Maior Faturamento</div>
+          <div class="insight-value">{{ performanceVendedores[0]?.nome }}</div>
+          <div class="insight-detail">{{ formatCurrency(performanceVendedores[0]?.valorTotal || 0) }}</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-icon">📊</div>
+        <div class="insight-content">
+          <div class="insight-title">Principal Canal</div>
+          <div class="insight-value">{{ leadsPorOrigem[0]?.origem }}</div>
+          <div class="insight-detail">{{ formatPercent(leadsPorOrigem[0]?.percentual || 0) }}</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-icon">🏆</div>
+        <div class="insight-content">
+          <div class="insight-title">Produto Líder</div>
+          <div class="insight-value">{{ leadsPorProduto[0]?.produto }}</div>
+          <div class="insight-detail">{{ leadsPorProduto[0]?.quantidade }} leads</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

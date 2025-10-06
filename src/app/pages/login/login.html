@@ -1,0 +1,51 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">
+        <img src="assets/images/logotipo_funchal.jpg" alt="Funchal Consórcio" class="logo-img" />
+        <p class="tagline">Sistema de Gestão de Leads</p>
+      </div>
+    </div>
+
+    <form class="login-form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Usuário</label>
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Digite seu usuário"
+          [disabled]="isLoading"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Digite sua senha"
+          [disabled]="isLoading"
+          required
+        />
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Entrar</span>
+        <span *ngIf="isLoading">Entrando...</span>
+      </button>
+
+      <div class="login-footer">
+        <a href="#" class="forgot-password">Esqueceu a senha?</a>
+      </div>
+    </form>
+  </div>
+</div>

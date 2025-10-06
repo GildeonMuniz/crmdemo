@@ -1,0 +1,157 @@
+<div class="leads-container">
+  <div class="header">
+    <div>
+      <h1>Gestão de Leads</h1>
+      <p class="subtitle">Visualização sintética - Lista completa de leads</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary">+ Novo Lead</button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-card">
+    <h3>Filtros</h3>
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>Busca Geral</label>
+        <input
+          type="text"
+          [(ngModel)]="filtroBusca"
+          (ngModelChange)="applyFilters()"
+          placeholder="Nome, CPF, Email ou Telefone"
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Situação</label>
+        <select [(ngModel)]="filtroSituacao" (ngModelChange)="applyFilters()" class="filter-select">
+          <option value="">Todas</option>
+          <option *ngFor="let situacao of situacoes" [value]="situacao">{{ situacao }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Produto</label>
+        <select [(ngModel)]="filtroProduto" (ngModelChange)="applyFilters()" class="filter-select">
+          <option value="">Todos</option>
+          <option *ngFor="let produto of produtos" [value]="produto">{{ produto }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Responsável</label>
+        <select [(ngModel)]="filtroResponsavel" (ngModelChange)="applyFilters()" class="filter-select">
+          <option value="">Todos</option>
+          <option *ngFor="let responsavel of responsaveis" [value]="responsavel">{{ responsavel }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <button class="btn btn-secondary" (click)="clearFilters()">Limpar Filtros</button>
+      </div>
+    </div>
+
+    <div class="results-info">
+      <strong>{{ leadsFiltered.length }}</strong> lead(s) encontrado(s)
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando leads...</p>
+  </div>
+
+  <!-- Tabela de Leads -->
+  <div *ngIf="!loading" class="table-card">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Contato</th>
+            <th>Produto</th>
+            <th>Fase</th>
+            <th>Situação</th>
+            <th>Tempo/SLA</th>
+            <th>Valor Proposta</th>
+            <th>Data Recebimento</th>
+            <th>Próxima Ação</th>
+            <th>Responsável</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lead of leadsFiltered" class="table-row">
+            <td>{{ lead.id }}</td>
+            <td>
+              <div class="lead-name">{{ lead.nome }}</div>
+            </td>
+            <td>{{ lead.cpf }}</td>
+            <td>
+              <div class="contact-info">
+                <div>📞 {{ lead.telefone }}</div>
+                <div class="email">✉️ {{ lead.email }}</div>
+              </div>
+            </td>
+            <td>{{ lead.produto }}</td>
+            <td>
+              <div class="fase-badge" [style.background]="getFaseCor(lead.faseId)">
+                <span class="fase-icon">{{ getFaseIcone(lead.faseId) }}</span>
+                <span class="fase-nome">{{ lead.fase }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="situacao-cascata">
+                <span class="badge badge-situacao" [ngClass]="getSituacaoBadgeClass(lead.situacao)">
+                  {{ lead.situacao }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="sla-info" *ngIf="lead.slaDias && lead.slaDias > 0">
+                <div class="sla-days" [ngClass]="getSLAStatus(lead)" [title]="getSLATooltip(lead)">
+                  <span class="sla-current">{{ lead.diasNaSituacao }}</span>
+                  <span class="sla-separator">/</span>
+                  <span class="sla-limit">{{ lead.slaDias }}</span>
+                  <span class="sla-label">dias</span>
+                </div>
+                <div class="sla-progress">
+                  <div class="sla-bar" [style.width.%]="getSLAPercentage(lead)" [ngClass]="getSLAStatus(lead)"></div>
+                </div>
+                <div class="sla-status-text" [ngClass]="getSLAStatus(lead)">
+                  {{ getSLAStatusText(lead) }}
+                </div>
+              </div>
+              <div class="sla-info" *ngIf="!lead.slaDias || lead.slaDias === 0">
+                <span class="sla-inactive">N/A</span>
+              </div>
+            </td>
+            <td class="valor">{{ formatCurrency(lead.valorProposta) }}</td>
+            <td>{{ formatDate(lead.dataRecebimento) }}</td>
+            <td>
+              <div class="proxima-acao">{{ lead.proximaAcao }}</div>
+            </td>
+            <td>{{ lead.responsavel }}</td>
+            <td>
+              <div class="actions">
+                <a [routerLink]="['/leads', lead.id]" class="btn-action" title="Ver Detalhes">
+                  👁️
+                </a>
+                <button class="btn-action" title="Editar">✏️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="leadsFiltered.length === 0" class="no-results">
+        <p>Nenhum lead encontrado com os filtros aplicados.</p>
+      </div>
+    </div>
+  </div>
+</div>
