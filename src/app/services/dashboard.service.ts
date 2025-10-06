@@ -33,7 +33,7 @@ export class DashboardService {
   };
 
   private mockStatusAtendentes: StatusAtendente[] = [
-    { status: 'Disponível', quantidade: 12, cor: '#28a745', icone: '✓' },
+    { status: 'Disponível', quantidade: 3, cor: '#28a745', icone: '✓' },
     { status: 'Em Ligação', quantidade: 8, cor: '#007bff', icone: '📞' },
     { status: 'Pós-Ligação', quantidade: 5, cor: '#ffc107', icone: '📝' },
     { status: 'Pausa', quantidade: 3, cor: '#6c757d', icone: '⏸' }
