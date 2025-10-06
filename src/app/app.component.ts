@@ -12,21 +12,26 @@ import { CommonModule } from '@angular/common';
         <div class="navbar-brand">
           <img src="assets/images/logotipo_funchal.jpg" alt="Funchal Consórcio" class="logo" />
         </div>
-        <ul class="nav-menu">
+        <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-menu" [class.mobile-open]="isMobileMenuOpen">
           <li>
-            <a routerLink="/dashboard" routerLinkActive="active">
+            <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMobileMenu()">
               <span class="icon">📊</span>
               <span>Dashboard</span>
             </a>
           </li>
           <li>
-            <a routerLink="/leads" routerLinkActive="active">
+            <a routerLink="/leads" routerLinkActive="active" (click)="closeMobileMenu()">
               <span class="icon">👥</span>
               <span>Leads</span>
             </a>
           </li>
           <li>
-            <a routerLink="/analytics" routerLinkActive="active">
+            <a routerLink="/analytics" routerLinkActive="active" (click)="closeMobileMenu()">
               <span class="icon">📈</span>
               <span>Analytics</span>
             </a>
@@ -174,18 +179,134 @@ import { CommonModule } from '@angular/common';
       overflow-y: auto;
       background: #f5f7fa;
     }
+
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 1001;
+      margin-left: auto;
+
+      span {
+        width: 100%;
+        height: 3px;
+        background: white;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+
+      &.active span:nth-child(1) {
+        transform: rotate(45deg) translate(8px, 8px);
+      }
+
+      &.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      &.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-navbar {
+        padding: 0 15px;
+        position: relative;
+      }
+
+      .navbar-brand .logo {
+        height: 40px;
+        padding: 3px 10px;
+      }
+
+      .hamburger-btn {
+        display: flex;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: calc(100vh - 70px);
+        background: linear-gradient(180deg, #4a9fd8 0%, #3a8fc8 100%);
+        flex-direction: column;
+        padding: 20px 0;
+        margin: 0;
+        gap: 0;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+
+        &.mobile-open {
+          left: 0;
+        }
+
+        li {
+          width: 100%;
+        }
+
+        a {
+          width: 100%;
+          padding: 16px 20px;
+          border-radius: 0;
+          border-left: 4px solid transparent;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+          }
+
+          &.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-left-color: white;
+          }
+        }
+      }
+
+      .user-info {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar-brand .logo {
+        height: 35px;
+        padding: 2px 8px;
+      }
+
+      .nav-menu {
+        width: 85%;
+      }
+    }
   `]
 })
 export class AppComponent {
   title = 'CRM Consórcio';
   userName = '';
   isLoginPage = false;
+  isMobileMenuOpen = false;
 
   constructor(private router: Router) {
     this.router.events.subscribe(() => {
       this.isLoginPage = this.router.url === '/login';
       this.userName = localStorage.getItem('userName') || '';
     });
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
   }
 
   logout() {
