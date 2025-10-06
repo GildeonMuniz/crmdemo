@@ -4,9 +4,6 @@
       <h1>Gestão de Leads</h1>
       <p class="subtitle">Visualização sintética - Lista completa de leads</p>
     </div>
-    <div class="header-actions">
-      <button class="btn btn-primary">+ Novo Lead</button>
-    </div>
   </div>
 
   <!-- Filtros -->
@@ -70,7 +67,7 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th>
+            <th class="th-actions">Ações</th>
             <th>Nome</th>
             <th>CPF</th>
             <th>Contato</th>
@@ -82,37 +79,42 @@
             <th>Data Recebimento</th>
             <th>Próxima Ação</th>
             <th>Responsável</th>
-            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let lead of leadsFiltered" class="table-row">
-            <td>{{ lead.id }}</td>
-            <td>
-              <div class="lead-name">{{ lead.nome }}</div>
-            </td>
-            <td>{{ lead.cpf }}</td>
-            <td>
-              <div class="contact-info">
-                <div>📞 {{ lead.telefone }}</div>
-                <div class="email">✉️ {{ lead.email }}</div>
+            <td data-label="Ações" class="td-actions">
+              <div class="actions">
+                <a [routerLink]="['/leads', lead.id]" class="btn-action" title="Ver Detalhes">
+                  <span class="eye-icon">👁️</span>
+                </a>
               </div>
             </td>
-            <td>{{ lead.produto }}</td>
-            <td>
+            <td data-label="Nome">
+              <div class="lead-name">{{ lead.nome }}</div>
+            </td>
+            <td data-label="CPF" class="mobile-hide">{{ lead.cpf }}</td>
+            <td data-label="Telefone">
+              <div class="contact-info">
+                <div>📞 {{ lead.telefone }}</div>
+                <div class="email mobile-hide">✉️ {{ lead.email }}</div>
+              </div>
+            </td>
+            <td data-label="Produto" class="mobile-hide">{{ lead.produto }}</td>
+            <td data-label="Fase" class="mobile-hide">
               <div class="fase-badge" [style.background]="getFaseCor(lead.faseId)">
                 <span class="fase-icon">{{ getFaseIcone(lead.faseId) }}</span>
                 <span class="fase-nome">{{ lead.fase }}</span>
               </div>
             </td>
-            <td>
+            <td data-label="Situação">
               <div class="situacao-cascata">
                 <span class="badge badge-situacao" [ngClass]="getSituacaoBadgeClass(lead.situacao)">
                   {{ lead.situacao }}
                 </span>
               </div>
             </td>
-            <td>
+            <td data-label="SLA">
               <div class="sla-info" *ngIf="lead.slaDias && lead.slaDias > 0">
                 <div class="sla-days" [ngClass]="getSLAStatus(lead)" [title]="getSLATooltip(lead)">
                   <span class="sla-current">{{ lead.diasNaSituacao }}</span>
@@ -131,20 +133,12 @@
                 <span class="sla-inactive">N/A</span>
               </div>
             </td>
-            <td class="valor">{{ formatCurrency(lead.valorProposta) }}</td>
-            <td>{{ formatDate(lead.dataRecebimento) }}</td>
-            <td>
+            <td data-label="Valor Proposta" class="valor mobile-hide">{{ formatCurrency(lead.valorProposta) }}</td>
+            <td data-label="Data Recebimento" class="mobile-hide">{{ formatDate(lead.dataRecebimento) }}</td>
+            <td data-label="Próxima Ação" class="mobile-hide">
               <div class="proxima-acao">{{ lead.proximaAcao }}</div>
             </td>
-            <td>{{ lead.responsavel }}</td>
-            <td>
-              <div class="actions">
-                <a [routerLink]="['/leads', lead.id]" class="btn-action" title="Ver Detalhes">
-                  👁️
-                </a>
-                <button class="btn-action" title="Editar">✏️</button>
-              </div>
-            </td>
+            <td data-label="Responsável" class="mobile-hide">{{ lead.responsavel }}</td>
           </tr>
         </tbody>
       </table>

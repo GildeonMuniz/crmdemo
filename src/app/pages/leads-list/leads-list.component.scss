@@ -229,6 +229,11 @@
           color: #666;
           border-bottom: 2px solid #dee2e6;
           white-space: nowrap;
+
+          &.th-actions {
+            width: 60px;
+            text-align: center;
+          }
         }
       }
 
@@ -286,11 +291,30 @@
                 min-width: 100px;
                 padding-right: 12px;
               }
+
+              &.mobile-hide {
+                display: none;
+              }
             }
 
             &.valor {
               font-weight: 600;
               color: #28a745;
+            }
+
+            &.td-actions {
+              width: 60px;
+              text-align: center;
+              padding: 12px 8px;
+
+              @media (max-width: 768px) {
+                width: 100%;
+                text-align: left;
+
+                &::before {
+                  display: none;
+                }
+              }
             }
           }
         }
@@ -545,6 +569,10 @@
 
             &:hover {
               background: #f0f0f0;
+            }
+
+            .eye-icon {
+              display: inline-block;
             }
           }
         }
