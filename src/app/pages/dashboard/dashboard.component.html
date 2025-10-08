@@ -11,7 +11,7 @@
 
   <div *ngIf="!loading && dashboardData" class="dashboard-content">
     <!-- KPIs Principais -->
-    <div class="stats-grid">
+    <div class="stats-grid" *ngIf="featureService.isDashboardPanelEnabled('kpis')">
       <div class="stat-card blue">
         <div class="stat-icon">📊</div>
         <div class="stat-info">
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Status de Atendentes -->
-    <div class="chart-card status-atendentes-card full-width">
+    <div class="chart-card status-atendentes-card full-width" *ngIf="featureService.isDashboardPanelEnabled('statusAtendentes')">
       <h3>👥 Status de Atendentes</h3>
       <div class="chart-content">
         <div class="status-grid-horizontal">
@@ -75,15 +75,16 @@
     <!-- Grid de Gráficos -->
     <div class="charts-grid">
       <!-- Leads por Fase -->
-      <div class="chart-card">
+      <div class="chart-card" *ngIf="featureService.isDashboardPanelEnabled('leadsPorFase')">
         <h3>📊 Leads por Fase</h3>
         <div class="chart-content">
           <div class="pie-chart-container">
             <div class="pie-legend">
               <div *ngFor="let item of dashboardData.leadsPorFase"
-                   class="legend-item clickable"
+                   class="legend-item"
+                   [class.clickable]="featureService.isRouteEnabled('leads')"
                    (click)="navigateToLeadsByFase(item.faseId)"
-                   title="Clique para ver os leads desta fase">
+                   [title]="featureService.isRouteEnabled('leads') ? 'Clique para ver os leads desta fase' : ''">
                 <span class="legend-color" [style.background-color]="item.cor"></span>
                 <span class="legend-icon">{{ item.icone }}</span>
                 <span class="legend-label">{{ item.fase }}</span>
@@ -95,15 +96,16 @@
       </div>
 
       <!-- Leads por Situação -->
-      <div class="chart-card">
+      <div class="chart-card" *ngIf="featureService.isDashboardPanelEnabled('leadsPorSituacao')">
         <h3>📋 Leads por Situação</h3>
         <div class="chart-content">
           <div class="pie-chart-container">
             <div class="pie-legend">
               <div *ngFor="let item of dashboardData.leadsPorSituacao"
-                   class="legend-item clickable"
+                   class="legend-item"
+                   [class.clickable]="featureService.isRouteEnabled('leads')"
                    (click)="navigateToLeadsBySituacao(item.situacao)"
-                   title="Clique para ver os leads desta situação">
+                   [title]="featureService.isRouteEnabled('leads') ? 'Clique para ver os leads desta situação' : ''">
                 <span class="legend-color" [style.background-color]="item.cor"></span>
                 <span class="legend-label">{{ item.situacao }}</span>
                 <span class="legend-value">{{ item.quantidade }} ({{ formatPercent(item.percentual) }})</span>
@@ -114,7 +116,7 @@
       </div>
 
       <!-- Funil de Vendas -->
-      <div class="chart-card">
+      <div class="chart-card" *ngIf="featureService.isDashboardPanelEnabled('funilVendas')">
         <h3>Funil de Vendas</h3>
         <div class="funnel-container">
           <div *ngFor="let etapa of dashboardData.funilVendas" class="funnel-item">
@@ -131,7 +133,7 @@
     </div>
 
     <!-- Leads por Produto -->
-    <div class="chart-card full-width">
+    <div class="chart-card full-width" *ngIf="featureService.isDashboardPanelEnabled('leadsPorProduto')">
       <h3>Leads por Produto</h3>
       <div class="table-container">
         <table>
@@ -156,7 +158,7 @@
     </div>
 
     <!-- Performance de Vendedores -->
-    <div class="chart-card full-width">
+    <div class="chart-card full-width" *ngIf="featureService.isDashboardPanelEnabled('performanceVendedores')">
       <h3>Performance de Vendedores</h3>
       <div class="table-container">
         <table>
@@ -191,7 +193,7 @@
     </div>
 
     <!-- Leads por Origem -->
-    <div class="chart-card">
+    <div class="chart-card" *ngIf="featureService.isDashboardPanelEnabled('leadsPorOrigem')">
       <h3>Leads por Origem</h3>
       <div class="chart-content">
         <div class="bar-chart">
@@ -209,7 +211,7 @@
     </div>
 
     <!-- Tendência Temporal -->
-    <div class="chart-card">
+    <div class="chart-card" *ngIf="featureService.isDashboardPanelEnabled('tendenciaTemporal')">
       <h3>Tendência de Leads (Últimas Semanas)</h3>
       <div class="timeline-container">
         <div *ngFor="let item of dashboardData.tendenciaTemporal.slice(-6)" class="timeline-item">

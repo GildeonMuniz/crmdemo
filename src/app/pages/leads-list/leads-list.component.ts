@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LeadService } from '../../services/lead.service';
 import { LeadSintetico, Fase } from '../../models/lead.model';
+import { FeatureService } from '../../services/feature.service';
 
 @Component({
   selector: 'app-leads-list',
@@ -28,7 +29,15 @@ export class LeadsListComponent implements OnInit {
   responsaveis: string[] = [];
   fases: Fase[] = [];
 
-  constructor(private leadService: LeadService) {}
+  constructor(
+    private leadService: LeadService,
+    public featureService: FeatureService
+  ) {
+    // Inscreve para mudanças de configuração
+    this.featureService.getFeatures$().subscribe(() => {
+      // Força atualização da view quando configurações mudam
+    });
+  }
 
   ngOnInit(): void {
     this.fases = this.leadService.getFases();

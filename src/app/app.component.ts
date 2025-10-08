@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FeatureService } from './services/feature.service';
 
 @Component({
   selector: 'app-root',
@@ -18,19 +19,19 @@ import { CommonModule } from '@angular/common';
           <span></span>
         </button>
         <ul class="nav-menu" [class.mobile-open]="isMobileMenuOpen">
-          <li>
+          <li *ngIf="featureService.isMenuEnabled('dashboard')">
             <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMobileMenu()">
               <span class="icon">📊</span>
               <span>Dashboard</span>
             </a>
           </li>
-          <li>
+          <li *ngIf="featureService.isMenuEnabled('leads')">
             <a routerLink="/leads" routerLinkActive="active" (click)="closeMobileMenu()">
               <span class="icon">👥</span>
               <span>Leads</span>
             </a>
           </li>
-          <li>
+          <li *ngIf="featureService.isMenuEnabled('analytics')">
             <a routerLink="/analytics" routerLinkActive="active" (click)="closeMobileMenu()">
               <span class="icon">📈</span>
               <span>Analytics</span>
@@ -294,10 +295,18 @@ export class AppComponent {
   isLoginPage = false;
   isMobileMenuOpen = false;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    public featureService: FeatureService
+  ) {
     this.router.events.subscribe(() => {
       this.isLoginPage = this.router.url === '/login';
       this.userName = localStorage.getItem('userName') || '';
+    });
+
+    // Inscreve para mudanças de configuração
+    this.featureService.getFeatures$().subscribe(() => {
+      // Força atualização da view quando configurações mudam
     });
   }
 

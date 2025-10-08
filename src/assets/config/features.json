@@ -1,0 +1,24 @@
+{
+  "menu": {
+    "dashboard": true,
+    "leads": true,
+    "analytics": false
+  },
+  "dashboardPanels": {
+    "kpis": true,
+    "statusAtendentes": true,
+    "leadsPorFase": true,
+    "leadsPorSituacao": true,
+    "funilVendas": true,
+    "leadsPorProduto": false,
+    "performanceVendedores": false,
+    "leadsPorOrigem": false,
+    "tendenciaTemporal": false
+  },
+  "routes": {
+    "dashboard": true,
+    "leads": true,
+    "leadDetail": false,
+    "analytics": false
+  }
+}

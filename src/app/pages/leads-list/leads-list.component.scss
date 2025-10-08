@@ -571,6 +571,24 @@
               background: #f0f0f0;
             }
 
+            &.disabled {
+              opacity: 0.4;
+              cursor: not-allowed;
+              pointer-events: none;
+
+              &:hover {
+                background: none;
+              }
+
+              @media (max-width: 768px) {
+                background: #f8f9fa;
+
+                &:hover, &:active {
+                  background: #f8f9fa;
+                }
+              }
+            }
+
             .eye-icon {
               display: inline-block;
             }

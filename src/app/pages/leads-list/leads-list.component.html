@@ -85,9 +85,17 @@
           <tr *ngFor="let lead of leadsFiltered" class="table-row">
             <td data-label="Ações" class="td-actions">
               <div class="actions">
-                <a [routerLink]="['/leads', lead.id]" class="btn-action" title="Ver Detalhes">
+                <a *ngIf="featureService.isRouteEnabled('leadDetail')"
+                   [routerLink]="['/leads', lead.id]"
+                   class="btn-action"
+                   title="Ver Detalhes">
                   <span class="eye-icon">👁️</span>
                 </a>
+                <span *ngIf="!featureService.isRouteEnabled('leadDetail')"
+                      class="btn-action disabled"
+                      title="Detalhes não disponíveis">
+                  <span class="eye-icon">👁️</span>
+                </span>
               </div>
             </td>
             <td data-label="Nome">

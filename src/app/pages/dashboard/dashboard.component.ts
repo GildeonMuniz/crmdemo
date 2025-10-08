@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardData } from '../../models/dashboard.model';
+import { FeatureService } from '../../services/feature.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,8 +18,14 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private dashboardService: DashboardService,
-    private router: Router
-  ) {}
+    private router: Router,
+    public featureService: FeatureService
+  ) {
+    // Inscreve para mudanças de configuração
+    this.featureService.getFeatures$().subscribe(() => {
+      // Força atualização da view quando configurações mudam
+    });
+  }
 
   ngOnInit(): void {
     this.loadDashboard();
@@ -59,12 +66,20 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateToLeadsByFase(faseId: number): void {
+    // Verifica se a rota de leads está habilitada
+    if (!this.featureService.isRouteEnabled('leads')) {
+      return;
+    }
     // Navega para a página de leads com filtro de fase
     // Quando implementado o real, será usado: this.router.navigate(['/leads'], { queryParams: { faseId } });
     this.router.navigate(['/leads']);
   }
 
   navigateToLeadsBySituacao(situacao: string): void {
+    // Verifica se a rota de leads está habilitada
+    if (!this.featureService.isRouteEnabled('leads')) {
+      return;
+    }
     // Navega para a página de leads com filtro de situação
     // Quando implementado o real, será usado: this.router.navigate(['/leads'], { queryParams: { situacao } });
     this.router.navigate(['/leads']);
